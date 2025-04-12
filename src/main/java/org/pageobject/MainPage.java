@@ -11,7 +11,7 @@ import java.time.Duration;
 import java.util.List;
 
 public class MainPage {
-    private WebDriver driver;
+    private final WebDriver driver;
 
     // Локаторы
     // Кнопка «Заказать» в хедере

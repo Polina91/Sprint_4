@@ -3,8 +3,6 @@ package tests;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 
 import org.pageobject.MainPage;
 
@@ -13,9 +11,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 
 @RunWith(Parameterized.class)
-public class FAQTests {
+public class FAQTests extends BaseTest{
 
-    private WebDriver driver;
     private final int index;
     private final String expectedAnswer;
 
@@ -38,12 +35,6 @@ public class FAQTests {
         };
     }
 
-    @Before
-    public void setUp() {
-        driver = new ChromeDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-    }
-
     @Test
     public void faqAnswerShouldBeCorrect() {
         MainPage mainPage = new MainPage(driver);
@@ -52,8 +43,4 @@ public class FAQTests {
         assertThat(actualAnswer, is(expectedAnswer));
     }
 
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
 }

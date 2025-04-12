@@ -2,9 +2,14 @@ package org.pageobject;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class OrderPage {
-    private WebDriver driver;
+    private final WebDriver driver;
 
     // Локаторы формы
     private final By nameField = By.xpath("//input[@placeholder='* Имя']");
@@ -22,7 +27,7 @@ public class OrderPage {
     private final By colorField = By.xpath("//label[contains(text(),'чёрный жемчуг')]");
     private final By trueOrderButton = By.xpath("/html[1]/body[1]/div[1]/div[1]/div[2]/div[3]/button[2]");
     private final By approveButton = By.xpath("//button[contains(text(),'Да')]");
-
+    private final By modalWindow = By.className("Order_ModalHeader__3FDaJ");
 
 
     public OrderPage(WebDriver driver) {
@@ -46,5 +51,11 @@ public class OrderPage {
         driver.findElement(colorField).click();
         driver.findElement(trueOrderButton).click();
         driver.findElement(approveButton).click();
+    }
+    // Обрабатываем модальное окно
+    public String getModalWindowText() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement modal = wait.until(ExpectedConditions.visibilityOfElementLocated(modalWindow));
+        return modal.getText();
     }
 }

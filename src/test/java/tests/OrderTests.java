@@ -3,30 +3,20 @@ package tests;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.pageobject.MainPage;
 import org.pageobject.OrderPage;
-
-import java.time.Duration;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringContains.containsString;
 
 @RunWith(Parameterized.class)
-public class OrderTests {
-
-    private WebDriver driver;
+public class OrderTests extends BaseTest{ ;
 
     private final String name;
     private final String lastName;
     private final String address;
     private final String phone;
+    private final String placedOrderText = "Заказ оформлен";
 
     public OrderTests(String name, String lastName, String address, String phone) {
         this.name = name;
@@ -43,15 +33,6 @@ public class OrderTests {
         };
     }
 
-    @Before
-    public void setUp() {
-        // Тут не срабатывает клик по approveButton для финального подтверждения заказа и смены текста модалки
-        driver = new ChromeDriver();
-        // В Firefox все тесты с оформлением заказа проходят
-        //driver = new FirefoxDriver();
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-    }
-
     @Test
     public void orderScooterFromTopButton() {
         MainPage mainPage = new MainPage(driver);
@@ -60,11 +41,7 @@ public class OrderTests {
         OrderPage orderPage = new OrderPage(driver);
         orderPage.fillOrderForm(name, lastName, address, phone);
 
-        // Обрабатываем модальное окно
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement modal = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("Order_ModalHeader__3FDaJ")));
-        String modalText = modal.getText();
-        assertThat(modalText, containsString("Заказ оформлен"));
+        assertThat(orderPage.getModalWindowText(), containsString(placedOrderText));
     }
 
     @Test
@@ -75,15 +52,6 @@ public class OrderTests {
         OrderPage orderPage = new OrderPage(driver);
         orderPage.fillOrderForm(name, lastName, address, phone);
 
-        // Обрабатываем модальное окно
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement modal = wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("Order_ModalHeader__3FDaJ")));
-        String modalText = modal.getText();
-        assertThat(modalText, containsString("Заказ оформлен"));
-    }
-
-    @After
-    public void tearDown() {
-        driver.quit();
+        assertThat(orderPage.getModalWindowText(), containsString(placedOrderText));
     }
 }
